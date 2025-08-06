@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ShoppingBag } from 'lucide-react';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage,Link } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 
 const LoginForm = ({ user }) => {
@@ -39,7 +39,7 @@ const LoginForm = ({ user }) => {
       </div>
 
       <h2 className="text-2xl font-bold text-center">Login an Account</h2>
-      <a href={route('register.user')}><p className="text-blue-700 text-center">Don't have an account? Register</p></a>
+      <Link href={route('register.user')}><p className="text-blue-700 text-center">Don't have an account? Register</p></Link>
       {/* alert */}
       {(flash.message || flash.error) && (
         <div

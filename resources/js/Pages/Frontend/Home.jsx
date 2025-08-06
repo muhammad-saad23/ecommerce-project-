@@ -24,22 +24,22 @@ export default function Home({categories}) {
     {
       title: "Source from Industry Hubs",
       icon: <Search className="w-6 h-6 text-white" />,
-      image: "/images/industry.jpg", // replace with real image paths
+      image: "https://plus.unsplash.com/premium_photo-1677323396129-0a5d464eb491?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGluZHVzdHJ5JTIwcGljfGVufDB8MHwwfHx8MA%3D%3D", 
     },
     {
       title: "Customize Your Products",
       icon: <Settings className="w-6 h-6 text-white" />,
-      image: "/images/customize.jpg",
+      image: "https://images.unsplash.com/photo-1618164535983-a1ce60c3998b?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y3VzdG9taXplJTIwcGljfGVufDB8MHwwfHx8MA%3D%3D",
     },
     {
       title: "Fast, reliable shipping by ocean or air",
       icon: <Send className="w-6 h-6 text-white" />,
-      image: "/images/shipping.jpg",
+      image: "https://images.unsplash.com/photo-1543146223-7a91d5d15aeb?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fHNoaXBwaW5nJTIwcGljfGVufDB8MHwwfHx8MA%3D%3D",
     },
     {
       title: "Product monitoring and inspection",
       icon: <Shield className="w-6 h-6 text-white" />,
-      image: "/images/inspection.jpg",
+      image: "https://plus.unsplash.com/premium_photo-1682882535034-e5cd343742d6?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW5zcGVjdGlvbiUyMHBpY3xlbnwwfDB8MHx8fDA%3D",
     },
   ];
 
@@ -293,7 +293,7 @@ export default function Home({categories}) {
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-28 sm:h-32 object-cover" 
+                  className="w-full h-32 lg:h-40 object-cover" 
                 />
                 <div className="absolute top-2 right-2 bg-black/50 p-2 rounded-full">
                   {service.icon}

@@ -202,27 +202,7 @@ const Search = () => {
                     </aside>
 
                     {/* Main Content Area */}
-                    <main className="flex-1 p-4 lg:p-8">
-
-                        <nav className="text-sm text-gray-500 mb-4 hidden lg:block">
-                            <ul className="list-none p-0 inline-flex">
-                                <li className="flex items-center">
-                                    <a href="#" className="text-blue-600 hover:underline">Home</a>
-                                    <span className="mx-2">/</span>
-                                </li>
-                                <li className="flex items-center">
-                                    <a href="#" className="text-blue-600 hover:underline">Clothing</a>
-                                    <span className="mx-2">/</span>
-                                </li>
-                                <li className="flex items-center">
-                                    <a href="#" className="text-blue-600 hover:underline">Men's wear</a>
-                                    <span className="mx-2">/</span>
-                                </li>
-                                <li className="flex items-center">
-                                    <span className="text-gray-700">Summer clothing</span>
-                                </li>
-                            </ul>
-                        </nav>
+                    <main className="flex-1 p-4 lg:p-8">                       
 
                         <div className="bg-white rounded-lg shadow-md p-4 mb-6 hidden lg:flex flex-wrap justify-between items-center">
                             <div className="text-gray-700 text-sm">

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import { SlidersHorizontal } from 'lucide-react';
+import { usePage,Link } from '@inertiajs/react';
+
 
 const categories = ['Mobile accessory', 'Electronics', 'Smartphones', 'Modern tech', 'See all'];
 const brands = ['Samsung', 'Apple', 'Huawei', 'Pocco', 'Lenovo', 'See all'];
@@ -94,7 +96,7 @@ const ProductListing = ({products}) => {
 
 
   const ProductListItem = ({ product }) => (
-    <a href={route('productDetail',product.id)}>
+    <Link href={route('productDetail',product.id)}>
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex p-4 mb-4 relative hover:shadow-lg transition-shadow duration-300">
       <img src={`images/${product.product_image}`} alt={product.product_name} className="w-28 h-28 object-contain mr-4 rounded-lg" />
       <div className="flex-1">
@@ -114,7 +116,7 @@ const ProductListing = ({products}) => {
         <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
       </button>
     </div>
-    </a>
+    </Link>
   );
 
   return (
@@ -200,26 +202,7 @@ const ProductListing = ({products}) => {
 
           {/* Main Content Area */}
           <main className="flex-1 p-4 lg:p-8">
-
-            <nav className="text-sm text-gray-500 mb-4 hidden lg:block">
-              <ul className="list-none p-0 inline-flex">
-                <li className="flex items-center">
-                  <a href="#" className="text-blue-600 hover:underline">Home</a>
-                  <span className="mx-2">/</span>
-                </li>
-                <li className="flex items-center">
-                  <a href="#" className="text-blue-600 hover:underline">Clothing</a>
-                  <span className="mx-2">/</span>
-                </li>
-                <li className="flex items-center">
-                  <a href="#" className="text-blue-600 hover:underline">Men's wear</a>
-                  <span className="mx-2">/</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="text-gray-700">Summer clothing</span>
-                </li>
-              </ul>
-            </nav>
+           
 
             <div className="bg-white rounded-lg shadow-md p-4 mb-6 hidden lg:flex flex-wrap justify-between items-center">
               <div className="text-gray-700 text-sm">

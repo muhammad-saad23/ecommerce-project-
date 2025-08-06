@@ -17,10 +17,28 @@ class FrontendController extends Controller
 {
     public function home(){
         $categories=category::latest()->get();        
+        $products = product::join('category','product.category_id','=','category.id')
+        ->select('product.*','category.category_name')
+        ->latest()
+        ->get();
         return Inertia::render('Frontend/Home',[
             'categories'=>$categories,
+            'products'=>$products,
         ]);
     }
+    public function productsByCategory($id)
+    {
+        $category = category::findOrFail($id);
+        $categories = category::latest()->get();
+        $products = Product::where('category_id', $id)->latest()->get();
+
+        return Inertia::render('Frontend/Search', [
+            'categories' => $categories,
+            'category' => $category,
+            'products' => $products,
+        ]);
+    }
+
 
     public function productList(){
         $products = product::join('category','product.category_id','=','category.id')
@@ -59,9 +77,10 @@ class FrontendController extends Controller
         }
 
         $products = $query->get();
-
+        // $categories=category::latest()->get();
         return Inertia::render('Frontend/Search', [
             'products' => $products,
+            // 'categories' => $categories,
             'search' => $request->search,
             'category_id' => $request->category_id,
         ]);

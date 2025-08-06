@@ -1,7 +1,7 @@
 import { ShoppingBag } from 'lucide-react';
 import React from 'react';
 import InputError from '@/Components/InputError';
-import { useForm } from '@inertiajs/react';
+import { useForm,Link } from '@inertiajs/react';
 
 const RegisterForm = () => {
     const { data, setData, post, errors, processing } = useForm({
@@ -35,9 +35,9 @@ const RegisterForm = () => {
             </div>
 
             <h2 className="text-2xl font-bold text-center">Create an Account</h2>
-            <a href={route('login.user')}>
+            <Link href={route('login.user')}>
                 <p className="text-blue-700 text-center">Already Have Account?</p>
-            </a>
+            </Link>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
                 {/* Name */}

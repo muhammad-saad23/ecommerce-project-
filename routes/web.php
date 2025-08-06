@@ -22,13 +22,15 @@ use Inertia\Inertia;
     //     return Inertia::render('Home')->route('home');
     // });
 Route::controller(FrontendController::class)->group(function(){
+    // Route::get('/navbar','navbar')->name('navbar');
+    Route::get('/category/{id}','productsByCategory')->name('category.product');
     Route::get('/','home')->name('home');
 
     Route::middleware(['user_login'])->group(function(){
-        Route::get('/userregister','register')->name('register.user');
-        Route::post('/userregister','CreateRegister')->name('register.store');
-        Route::get('/userlogin','login')->name('login.user');
-        Route::post('/userlogin','CreateLogin')->name('login.store');
+        Route::get('/user/register','register')->name('register.user');
+        Route::post('/user/register','CreateRegister')->name('register.store');
+        Route::get('/user/login','login')->name('login.user');
+        Route::post('/user/login','CreateLogin')->name('login.store');
     });
     Route::get('/logout','logout')->name('logout.user');
 
