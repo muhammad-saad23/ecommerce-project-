@@ -1,6 +1,6 @@
 import { Search, Facebook, Shield, Settings, Send, Instagram, Linkedin, Youtube, Twitter } from "lucide-react"
-import Button from "@/components/SecondaryButton"
-import Input from "@/components/TextInput"
+// import Button from "@/components/SecondaryButton"
+// import Input from "@/components/TextInput"
 // import { Card } from "@/components/Card"
 import FrontendLayout from "@/Layouts/FrontendLayout"
 
