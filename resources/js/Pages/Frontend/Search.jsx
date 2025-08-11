@@ -3,7 +3,7 @@ import FrontendLayout from '@/Layouts/FrontendLayout';
 import { SlidersHorizontal } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
 
-const categories = ['Mobile accessory', 'Electronics', 'Smartphones', 'Modern tech', 'See all'];
+const categories = ['Laptops', 'Electronics', 'Smartphones', 'Modern tech', 'See all'];
 const brands = ['Samsung', 'Apple', 'Huawei', 'Pocco', 'Lenovo', 'See all'];
 const features = ['Metallic', 'Plastic cover', '8GB Ram', 'Super power', 'Large Memory', 'See all'];
 const conditions = ['Any', 'Refurbished', 'Brand new', 'Old items'];
@@ -16,6 +16,8 @@ const Search = () => {
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [selectedFilters, setSelectedFilters] = useState(['Huawei', 'Apple', '64GB']);
+    const [sortOption, setSortOption] = useState('');
+
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
@@ -24,7 +26,34 @@ const Search = () => {
     const removeFilter = (filterToRemove) => {
         setSelectedFilters(selectedFilters.filter(filter => filter !== filterToRemove));
     };
+    // // Category filter
+    // if (selectedCategories.length && !selectedCategories.includes(product.category_name)) return false;
 
+    // // Brand filter
+    // if (selectedBrands.length && !selectedBrands.includes(product.brand_name)) return false;
+
+    // // Condition filter
+    // if (selectedConditions.length && !selectedConditions.includes(product.condition)) return false;
+
+    // // Ratings filter
+    // if (selectedRatings.length) {
+    //     const productStars = Math.round(product.rating);
+    //     if (!selectedRatings.some(r => productStars >= r)) return false;
+    // }
+
+    // return true;
+    let filteredProducts = products.filter(product => {
+        // Price filter
+        if (minPrice && product.product_price < parseFloat(minPrice)) return false;
+        if (maxPrice && product.product_price > parseFloat(maxPrice)) return false;
+
+        return true
+    });
+    if (sortOption === "low-to-high") {
+        filteredProducts = [...filteredProducts].sort((a, b) => a.product_price - b.product_price);
+    } else if (sortOption === "high-to-low") {
+        filteredProducts = [...filteredProducts].sort((a, b) => b.product_price - a.product_price);
+    } 
 
     const FilterSection = ({ title, items, type = 'list', children }) => (
         <div className="mb-6 border-b border-gray-200 pb-4">
@@ -126,11 +155,11 @@ const Search = () => {
                 <div className="lg:hidden bg-white shadow-md p-4 flex justify-between items-centerz-30">
                     <div className="flex items-center space-x-2">
                         <span className="text-gray-700 font-semibold">Sort:</span>
-                        <select className="form-select border border-gray-300 rounded-md p-1 text-sm text-gray-700">
-                            <option>Newest</option>
-                            <option>Featured</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
+                        <select className="form-select border border-gray-300 rounded-md p-1 text-sm text-gray-700" value={sortOption} onChange={(e)=>setSortOption(e.target.value)}>
+                            <option value="newest">Newest</option>
+                            <option value="featured">Featured</option>
+                            <option value="low-to-high">Price: Low to High</option>
+                            <option value="high-to-low">Price: High to Low</option>
                         </select>
                     </div>
                     <button
@@ -147,7 +176,7 @@ const Search = () => {
                     {/* Sidebar */}
                     <aside
                         className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg p-6 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                            } lg:relative lg:translate-x-0 lg:w-72 transition-transform duration-300 ease-in-out z-40`}
+                            } lg:relative lg:translate-x-0 lg:w-72 transition-transform duration-300 ease-in-out z-10`}
                     >
                         <div className="flex justify-between items-center mb-6 lg:hidden">
                             <h2 className="text-xl font-bold text-gray-800">Filters</h2>
@@ -213,11 +242,11 @@ const Search = () => {
                                     <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 rounded mr-1" />
                                     Verified only
                                 </label>
-                                <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700">
-                                    <option>Featured</option>
-                                    <option>Newest</option>
-                                    <option>Price: Low to High</option>
-                                    <option>Price: High to Low</option>
+                                <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700" value={sortOption}onChange={(e) => setSortOption(e.target.value)}>
+                                    <option value="newest">Newest</option>
+                                    <option value="featured">Featured</option>
+                                    <option value="low-to-high">Price: Low to High</option>
+                                    <option value="high-to-low">Price: High to Low</option>
                                 </select>
                                 <div className="flex space-x-1">
                                     <button className="p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
@@ -234,9 +263,9 @@ const Search = () => {
 
                         {/* Product List */}
                         <div className="space-y-4">
-                            {products.length ? (
-                                products.map(product => (
-                                    <ProductListItem key={product.id} product={product} />
+                            {filteredProducts.length ? (
+                                filteredProducts.map(product => (
+                                    <ProductListItem key={product.pid} product={product} />
                                 ))
                             ) : (
                                 <p className='text-gray-700 text-3xl text-center md:mt-8 mr-[8rem]'>No Items found.</p>

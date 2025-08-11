@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import { SlidersHorizontal } from 'lucide-react';
-import { usePage,Link } from '@inertiajs/react';
+import { usePage, Link } from '@inertiajs/react';
 
 
 const categories = ['Mobile accessory', 'Electronics', 'Smartphones', 'Modern tech', 'See all'];
@@ -10,11 +10,13 @@ const features = ['Metallic', 'Plastic cover', '8GB Ram', 'Super power', 'Large 
 const conditions = ['Any', 'Refurbished', 'Brand new', 'Old items'];
 
 
-const ProductListing = ({products}) => {
+const ProductListing = ({ products }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedFilters, setSelectedFilters] = useState(['Huawei', 'Apple', '64GB']);
+  const [sortOption, setSortOption] = useState('');
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -24,6 +26,18 @@ const ProductListing = ({products}) => {
     setSelectedFilters(selectedFilters.filter(filter => filter !== filterToRemove));
   };
 
+  let filteredProducts = products.filter(product => {
+    // Price filter
+    if (minPrice && product.product_price < parseFloat(minPrice)) return false;
+    if (maxPrice && product.product_price > parseFloat(maxPrice)) return false;
+
+    return true
+  });
+  if (sortOption === "low-to-high") {
+    filteredProducts = [...filteredProducts].sort((a, b) => a.product_price - b.product_price);
+  } else if (sortOption === "high-to-low") {
+    filteredProducts = [...filteredProducts].sort((a, b) => b.product_price - a.product_price);
+  }
 
   const FilterSection = ({ title, items, type = 'list', children }) => (
     <div className="mb-6 border-b border-gray-200 pb-4">
@@ -96,26 +110,26 @@ const ProductListing = ({products}) => {
 
 
   const ProductListItem = ({ product }) => (
-    <Link href={route('productDetail',product.id)}>
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex p-4 mb-4 relative hover:shadow-lg transition-shadow duration-300">
-      <img src={`images/${product.product_image}`} alt={product.product_name} className="w-28 h-28 object-contain mr-4 rounded-lg" />
-      <div className="flex-1">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">{product.product_name}</h3>
-        <div className="flex items-center mb-2">
-          <span className="text-xl font-bold text-gray-900 mr-2">${product.product_price.toFixed(2)}</span>
+    <Link href={route('productDetail', product.id)}>
+      <div className="bg-white rounded-lg shadow-md overflow-hidden flex p-4 mb-4 relative hover:shadow-lg transition-shadow duration-300">
+        <img src={`images/${product.product_image}`} alt={product.product_name} className="w-28 h-28 object-contain mr-4 rounded-lg" />
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">{product.product_name}</h3>
+          <div className="flex items-center mb-2">
+            <span className="text-xl font-bold text-gray-900 mr-2">${product.product_price.toFixed(2)}</span>
+
+          </div>
+          <div className="flex items-center text-sm mb-2">
+            <StarRating rating={8} />
+            {/* <span className="text-gray-600 ml-2">(300 orders)</span> */}
+          </div>
+          <a href="#"><span className=" text-green-600">Free shiping</span></a>
 
         </div>
-        <div className="flex items-center text-sm mb-2">
-          <StarRating rating={8} />
-          {/* <span className="text-gray-600 ml-2">(300 orders)</span> */}
-        </div>
-        <a href="#"><span className=" text-green-600">Free shiping</span></a>
-
+        <button className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-200">
+          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        </button>
       </div>
-      <button className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-200">
-        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-      </button>
-    </div>
     </Link>
   );
 
@@ -125,11 +139,11 @@ const ProductListing = ({products}) => {
         <div className="lg:hidden bg-white shadow-md p-4 flex justify-between items-centerz-30">
           <div className="flex items-center space-x-2">
             <span className="text-gray-700 font-semibold">Sort:</span>
-            <select className="form-select border border-gray-300 rounded-md p-1 text-sm text-gray-700">
-              <option>Newest</option>
-              <option>Featured</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
+            <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+              <option value="newest">Newest</option>
+              <option value="featured">Featured</option>
+              <option value="low-to-high">Price: Low to High</option>
+              <option value="high-to-low">Price: High to Low</option>
             </select>
           </div>
           <button
@@ -192,7 +206,7 @@ const ProductListing = ({products}) => {
                 {[5, 4, 3, 2, 1].map((starCount) => (
                   <label key={starCount} className="flex items-center mb-2 text-sm text-gray-700">
                     <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 rounded mr-2" />
-                    <StarRating rating={starCount * 2} /> {/* Convert to 1-10 scale for StarRating component */}
+                    <StarRating rating={starCount * 2} />
                     <span className="ml-1 text-gray-600">{starCount === 5 ? '' : '& up'}</span>
                   </label>
                 ))}
@@ -202,7 +216,7 @@ const ProductListing = ({products}) => {
 
           {/* Main Content Area */}
           <main className="flex-1 p-4 lg:p-8">
-           
+
 
             <div className="bg-white rounded-lg shadow-md p-4 mb-6 hidden lg:flex flex-wrap justify-between items-center">
               <div className="text-gray-700 text-sm">
@@ -213,11 +227,11 @@ const ProductListing = ({products}) => {
                   <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 rounded mr-1" />
                   Verified only
                 </label>
-                <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700">
-                  <option>Featured</option>
-                  <option>Newest</option>
-                  <option>Price: Low to High</option>
-                  <option>Price: High to Low</option>
+                <select className="form-select border border-gray-300 rounded-md p-1 text-sm text-gray-700" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                  <option value="newest">Newest</option>
+                  <option value="featured">Featured</option>
+                  <option value="low-to-high">Price: Low to High</option>
+                  <option value="high-to-low">Price: High to Low</option>
                 </select>
                 <div className="flex space-x-1">
                   <button className="p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
@@ -234,9 +248,14 @@ const ProductListing = ({products}) => {
 
             {/* Product List */}
             <div className="space-y-4">
-              {products.map(product => (
-                <ProductListItem key={product.id} product={product} />
-              ))}
+              {filteredProducts.length ? (
+                filteredProducts.map(product => (
+                  <ProductListItem key={product.pid} product={product} />
+                ))
+              ) : (
+                <p className='text-gray-700 text-3xl text-center md:mt-8 mr-[8rem]'>No Items found.</p>
+              )
+              }
             </div>
 
             {/* Pagination */}
