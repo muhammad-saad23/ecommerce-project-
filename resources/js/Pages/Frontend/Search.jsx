@@ -17,6 +17,22 @@ const Search = () => {
     const [maxPrice, setMaxPrice] = useState('');
     const [selectedFilters, setSelectedFilters] = useState(['Huawei', 'Apple', '64GB']);
     const [sortOption, setSortOption] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  // pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  // Change page
+  const goToPage = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -42,7 +58,7 @@ const Search = () => {
     // }
 
     // return true;
-    let filteredProducts = products.filter(product => {
+    let filteredProducts = currentItems.filter(product => {
         // Price filter
         if (minPrice && product.product_price < parseFloat(minPrice)) return false;
         if (maxPrice && product.product_price > parseFloat(maxPrice)) return false;
@@ -53,7 +69,7 @@ const Search = () => {
         filteredProducts = [...filteredProducts].sort((a, b) => a.product_price - b.product_price);
     } else if (sortOption === "high-to-low") {
         filteredProducts = [...filteredProducts].sort((a, b) => b.product_price - a.product_price);
-    } 
+    }
 
     const FilterSection = ({ title, items, type = 'list', children }) => (
         <div className="mb-6 border-b border-gray-200 pb-4">
@@ -155,7 +171,7 @@ const Search = () => {
                 <div className="lg:hidden bg-white shadow-md p-4 flex justify-between items-centerz-30">
                     <div className="flex items-center space-x-2">
                         <span className="text-gray-700 font-semibold">Sort:</span>
-                        <select className="form-select border border-gray-300 rounded-md p-1 text-sm text-gray-700" value={sortOption} onChange={(e)=>setSortOption(e.target.value)}>
+                        <select className="form-select border border-gray-300 rounded-md p-1 text-sm text-gray-700" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                             <option value="newest">Newest</option>
                             <option value="featured">Featured</option>
                             <option value="low-to-high">Price: Low to High</option>
@@ -231,7 +247,7 @@ const Search = () => {
                     </aside>
 
                     {/* Main Content Area */}
-                    <main className="flex-1 p-4 lg:p-8">                       
+                    <main className="flex-1 p-4 lg:p-8">
 
                         <div className="bg-white rounded-lg shadow-md p-4 mb-6 hidden lg:flex flex-wrap justify-between items-center">
                             <div className="text-gray-700 text-sm">
@@ -242,7 +258,7 @@ const Search = () => {
                                     <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 rounded mr-1" />
                                     Verified only
                                 </label>
-                                <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700" value={sortOption}onChange={(e) => setSortOption(e.target.value)}>
+                                <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                                     <option value="newest">Newest</option>
                                     <option value="featured">Featured</option>
                                     <option value="low-to-high">Price: Low to High</option>
@@ -270,38 +286,53 @@ const Search = () => {
                             ) : (
                                 <p className='text-gray-700 text-3xl text-center md:mt-8 mr-[8rem]'>No Items found.</p>
                             )
-                        } 
+                            }
                         </div>
 
                         {/* Pagination */}
                         <div className="flex justify-end items-center mt-8">
-                            <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700 mr-4">
-                                <option>Show 10</option>
-                                <option>Show 20</option>
-                                <option>Show 50</option>
+                            <select
+                                value={itemsPerPage}
+                                onChange={(e) => {
+                                    setItemsPerPage(Number(e.target.value));
+                                    setCurrentPage(1);
+                                }}
+                                className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700 mr-4"
+                            >
+                                <option value={10}>Show 10</option>
+                                <option value={20}>Show 20</option>
+                                <option value={50}>Show 50</option>
                             </select>
+
                             <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <span className="sr-only">Previous</span>
-                                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                </a>
-                                <a href="#" aria-current="page" className="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    1
-                                </a>
-                                <a href="#" className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    2
-                                </a>
-                                <a href="#" className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
-                                    3
-                                </a>
-                                <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <span className="sr-only">Next</span>
-                                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                </a>
+                                <button
+                                    onClick={() => goToPage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                                >
+                                    Prev
+                                </button>
+
+                                {[...Array(totalPages)].map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => goToPage(i + 1)}
+                                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === i + 1
+                                            ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                                            : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                                            }`}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+
+                                <button
+                                    onClick={() => goToPage(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                                >
+                                    Next
+                                </button>
                             </nav>
                         </div>
                     </main>

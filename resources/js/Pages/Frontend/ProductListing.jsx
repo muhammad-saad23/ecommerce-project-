@@ -16,7 +16,23 @@ const ProductListing = ({ products }) => {
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedFilters, setSelectedFilters] = useState(['Huawei', 'Apple', '64GB']);
   const [sortOption, setSortOption] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
+  // pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  // Change page
+  const goToPage = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -26,7 +42,7 @@ const ProductListing = ({ products }) => {
     setSelectedFilters(selectedFilters.filter(filter => filter !== filterToRemove));
   };
 
-  let filteredProducts = products.filter(product => {
+  let filteredProducts = currentItems.filter(product => {
     // Price filter
     if (minPrice && product.product_price < parseFloat(minPrice)) return false;
     if (maxPrice && product.product_price > parseFloat(maxPrice)) return false;
@@ -260,33 +276,48 @@ const ProductListing = ({ products }) => {
 
             {/* Pagination */}
             <div className="flex justify-end items-center mt-8">
-              <select className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700 mr-4">
-                <option>Show 10</option>
-                <option>Show 20</option>
-                <option>Show 50</option>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="form-select border border-gray-300 rounded-md p-2 text-sm text-gray-700 mr-4"
+              >
+                <option value={10}>Show 10</option>
+                <option value={20}>Show 20</option>
+                <option value={50}>Show 50</option>
               </select>
+
               <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span className="sr-only">Previous</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" aria-current="page" className="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                  1
-                </a>
-                <a href="#" className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                  2
-                </a>
-                <a href="#" className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
-                  3
-                </a>
-                <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span className="sr-only">Next</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                  </svg>
-                </a>
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Prev
+                </button>
+
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goToPage(i + 1)}
+                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === i + 1
+                        ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                      }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Next
+                </button>
               </nav>
             </div>
           </main>
